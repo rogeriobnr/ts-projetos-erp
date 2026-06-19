@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-
+// O serviço de autenticação é responsável por lidar com o processo de login, registro e geração de tokens JWT
 @Injectable()
 export class AuthService {
   // Injetamos o Prisma (Banco de Dados) e o JwtService (Gerador de Crachás)
