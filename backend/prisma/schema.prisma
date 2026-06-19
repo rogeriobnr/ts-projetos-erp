@@ -1,0 +1,22 @@
+// Define que estamos gerando um cliente em JavaScript/TypeScript
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Define que nosso banco de dados é o PostgreSQL e pega a URL do arquivo .env
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Nossa primeira tabela: Cliente
+model Cliente {
+  // id: Chave primária universal única (UUID) gerada automaticamente
+  id        String   @id @default(uuid())
+  // nome: Campo de texto obrigatório
+  nome      String
+  // email: Campo de texto único (não podem existir dois clientes com o mesmo email)
+  email     String   @unique
+  // data de criação gerada automaticamente no momento do cadastro
+  createdAt DateTime @default(now())
+}
