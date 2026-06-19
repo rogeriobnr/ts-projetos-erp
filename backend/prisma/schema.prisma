@@ -1,22 +1,46 @@
-// Define que estamos gerando um cliente em JavaScript/TypeScript
+// backend/prisma/schema.prisma
+
 generator client {
   provider = "prisma-client-js"
 }
 
-// Define que nosso banco de dados é o PostgreSQL e pega a URL do arquivo .env
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// Nossa primeira tabela: Cliente
-model Cliente {
-  // id: Chave primária universal única (UUID) gerada automaticamente
+// Enum define uma lista fixa de opções aceitas para o nível de acesso
+enum Role {
+  ADMIN
+  TECNICO
+  USUARIO
+}
+
+// Nossa nova tabela de Usuários do sistema
+model Usuario {
+  // Chave primária universal única
   id        String   @id @default(uuid())
-  // nome: Campo de texto obrigatório
-  nome      String
-  // email: Campo de texto único (não podem existir dois clientes com o mesmo email)
+  
+  nome      String 
   email     String   @unique
-  // data de criação gerada automaticamente no momento do cadastro
+  
+  // A senha é opcional (marcada com '?') porque usuários do Google não terão senha no nosso banco
+  senha     String?  
+  
+  // ID único retornado pelo Google caso o usuário use o login social
+  googleId  String?  @unique
+  
+  // O nível de acesso padrão para qualquer novo cadastro será 'USUARIO'
+  role      Role     @default(USUARIO)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // Atualiza a data automaticamente sempre que o registro for alterado
+}
+
+// Mantemos a tabela de Cliente que já havíamos criado
+model Cliente {
+  id        String   @id @default(uuid())
+  nome      String
+  email     String   @unique
   createdAt DateTime @default(now())
 }
