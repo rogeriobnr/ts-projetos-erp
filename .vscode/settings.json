@@ -3,6 +3,7 @@
     "datasource",
     "postgresql",
     "TECNICO",
+    "usuario",
     "Usuario",
     "USUARIO",
     "uuid"

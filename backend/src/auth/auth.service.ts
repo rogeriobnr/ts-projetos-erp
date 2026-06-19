@@ -53,4 +53,32 @@ export class AuthService {
     const saltRounds = 10;
     return bcrypt.hash(senha, saltRounds);
   }
+  
+  // Função para registrar o primeiro admin
+  async registrarPrimeiroAdmin(email: string, senhaDigitada: string, nome: string) {
+    // Verifica se já existe alguém com esse email
+    const usuarioExiste = await this.prisma.usuario.findUnique({ where: { email } });
+    if (usuarioExiste) {
+      throw new UnauthorizedException('Usuário já existe');
+    }
+
+    // Criptografa a senha antes de salvar no banco
+    const senhaCriptografada = await this.hashPassword(senhaDigitada);
+
+    // Cria o usuário no banco de dados forçando o nível ADMIN
+    const novoUsuario = await this.prisma.usuario.create({
+      data: {
+        nome,
+        email,
+        senha: senhaCriptografada,
+        role: 'ADMIN',
+      },
+    });
+
+    // Retorna os dados do usuário sem a senha para segurança
+    const { senha, ...usuarioSemSenha } = novoUsuario;
+    return usuarioSemSenha;
+  }
+
 }
+
