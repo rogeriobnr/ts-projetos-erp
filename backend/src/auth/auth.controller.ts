@@ -18,17 +18,15 @@ export class AuthController {
   // Usaremos esta rota apenas uma vez para criar o seu utilizador de teste (Admin)
   @Post('setup')
   async setupAdmin(@Body() body: any) {
-    // Some projects may not have this method typed on AuthService
-    // Cast to any to call the setup helper if it exists at runtime
-    return (this.authService as any).registrarPrimeiroAdmin(
-      body.email,
-      body.senha,
-      body.nome,
+    return this.authService.registrarPrimeiroAdmin(
+      body.email, 
+      body.senha, 
+      body.nome
     );
   }
 
   // Nova Rota Protegida: GET http://localhost:3000/auth/perfil
-  // O @UseGuards(JwtAuthGuard) tranca a porta. Se não enviar o Token válido no cabeçalho,
+  // O @UseGuards(JwtAuthGuard) tranca a porta. Se não enviar o Token válido no cabeçalho, 
   // o NestJS retorna Erro 401 (Não Autorizado) automaticamente.
   @UseGuards(JwtAuthGuard)
   @Get('perfil')
