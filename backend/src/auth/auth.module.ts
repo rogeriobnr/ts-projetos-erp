@@ -1,23 +1,21 @@
+// backend/src/auth/auth.module.ts
+
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
+import { JwtStrategy } from './jwt.strategy'; // <-- Importação nova
 
 @Module({
   imports: [
-    // Registra o Passport como validador padrão
     PassportModule,
-    // Configura o gerador de Tokens JWT
     JwtModule.register({
-      // Em produção, isso DEVE vir do .env (ex: process.env.JWT_SECRET)
       secret: 'super-senha-secreta-ts-projetos',
-      signOptions: {
-        expiresIn: '8h', // O token do usuário será válido por 8 horas (um turno de trabalho)
-      },
+      signOptions: { expiresIn: '8h' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy], // <-- Adicionado aqui
 })
 export class AuthModule {}
